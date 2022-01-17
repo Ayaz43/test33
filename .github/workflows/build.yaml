@@ -1,0 +1,35 @@
+name: "build"
+
+on: [push]
+
+jobs:
+  vercel: 
+    runs-on: ubuntu-latest
+    name: "build nextjs app"
+    
+    
+    steps:
+       - name: checkout
+         uses: actions/checkout@v2
+         with:
+           persist-credentials: false
+           
+       - name: set env var 
+         run: |
+            echo "repo_name=${GITHUB_REPOSITORY}" >> $GITHUB_ENV
+            
+            echo ${GITHUB_REPOSITORY}
+
+            cat ${GITHUB_WORKSPACE}/config/spec.yaml
+            
+       - name: Display env var repo
+         run: |
+            echo ${{env.repo_name}}
+            
+       - name: Replace Action
+         uses: datamonsters/replace-action@v2
+         with:
+            files: 'config/spec.yaml'
+            replacements: '<CURRENT_REPOSITORY_NAME>=${{env.repo_name}}'
+
+            
